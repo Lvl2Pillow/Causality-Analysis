@@ -96,6 +96,22 @@ public abstract class IE {
 	}
 	
 	/**
+	 * Returns the minimum Manhattan distance between a term and any minterm from
+	 * the offset.
+	 * 
+	 * @param term
+	 * @return
+	 */
+	protected int minManhattanDistanceBetween(Term term) {
+		int minDist = 2;			// initialize to 2 is enough
+		for (Term minterm : offset) {
+			int dist = manhattanDistanceBetween(minterm, term);
+			minDist = (dist < minDist) ? dist : minDist;
+		}
+		return minDist;
+	}
+	
+	/**
 	 * Returns the Manhattan distance between a term and a minterm. The
 	 * Manhattan distance is the number of differences between a term and a
 	 * minterm.
