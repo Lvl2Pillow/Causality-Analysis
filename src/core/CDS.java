@@ -12,10 +12,10 @@ import java.util.Queue;
  *
  */
 public abstract class CDS {
-	protected final TermList onset;
-	protected final TermList offset;
+	protected final MintermList onset;
+	protected final MintermList offset;
 	
-	public CDS(TermList onset, TermList offset) {
+	public CDS(MintermList onset, MintermList offset) {
 		this.onset = onset;
 		this.offset = offset;
 	}
@@ -36,9 +36,9 @@ public abstract class CDS {
 	 */
 	protected TermSet getImplicants() {
 		TermSet implicants = new TermSet();
-		Queue<TermList> onsetPermutations = new LinkedList<TermList>();
+		Queue<MintermList> onsetPermutations = new LinkedList<MintermList>();
 		// initial permutation is the complete onset
-		onsetPermutations.add(new TermList(onset));
+		onsetPermutations.add(new MintermList(onset));
 		while (!onsetPermutations.isEmpty())
 			getImplicantsHelper(implicants, onsetPermutations, onsetPermutations.poll());
 		return implicants;
@@ -51,13 +51,13 @@ public abstract class CDS {
 	 * @param onsetPermutation current permutation of the onset.
 	 */
 	protected void getImplicantsHelper(TermSet implicants, 
-			Queue<TermList> onsetPermutations, TermList currentOnset) {
+			Queue<MintermList> onsetPermutations, MintermList currentOnset) {
 		// stop if current onset is empty, i.e. completely covered
 		if (currentOnset.isEmpty()) return;
 		TermSet implicantCandidates = getImplicantCandidates(currentOnset);
 		// add new onset permutations
 		for (Term implicant : implicantCandidates) {
-			TermList newOnset = new TermList(currentOnset);
+			MintermList newOnset = new MintermList(currentOnset);
 			onsetPermutations.add(newOnset.removeTermsCoveredBy(implicant));
 		}
 		// add implicants
@@ -70,7 +70,7 @@ public abstract class CDS {
 	 * @param currentOnset current permutation of the onset.
 	 * @return all "good" implicant candidates.
 	 */
-	protected TermSet getImplicantCandidates(TermList currentOnset) {
+	protected TermSet getImplicantCandidates(MintermList currentOnset) {
 		TermSet terms = new TermSet();
 		Queue<Term> termPermutations = new LinkedList<Term>();
 		// initial permutation is an empty term
@@ -91,10 +91,10 @@ public abstract class CDS {
 	 */
 	protected void getImplicantCandidatesHelper(TermSet terms, 
 			Queue<Term> termPermutations, Term currentTerm, 
-			TermList currentOnset) {
+			MintermList currentOnset) {
 		// stop if current term does not intersect with the offset
 		boolean intersects = false;
-		for (Term minterm : offset) {
+		for (Minterm minterm : offset) {
 			if (currentTerm.covers(minterm)) {
 				intersects = true;
 				break;
@@ -120,7 +120,7 @@ public abstract class CDS {
 	 * @return set of literal candidates to add to term.
 	 */
 	protected abstract LiteralSet getLiteralCandidates(Term term, 
-			TermList currentOnset);
+			MintermList currentOnset);
 	
 	/**
 	 * Returns the literal frequencies of all valid literals. The literal
@@ -132,11 +132,11 @@ public abstract class CDS {
 	 * @return
 	 */
 	protected Map<Literal, Double> getLiteralFrequencyHeuristic(Term term, 
-			TermList currentOnset) {
+			MintermList currentOnset) {
 		Map<Literal, Double> literalFrequencyHeuristic = new HashMap<Literal, Double>();
-		TermList uncoveredOnset = currentOnset.getUncoveredBy(term);
+		MintermList uncoveredOnset = currentOnset.getUncoveredBy(term);
 		// TODO log if currentOnset is empty or remaining uncovered onset is empty
-		for (Term minterm : uncoveredOnset) {
+		for (Minterm minterm : uncoveredOnset) {
 			for (Literal literal : minterm) {
 				// new literal
 				if (!literalFrequencyHeuristic.containsKey(literal))

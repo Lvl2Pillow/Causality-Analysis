@@ -1,5 +1,6 @@
 package core;
 
+import java.util.Collection;
 import java.util.HashSet;
 
 /**
@@ -17,9 +18,8 @@ public class TermSet extends HashSet<Term> {
 		super();
 	}
 	
-	public TermSet(TermSet termSet) {
-		super();
-		super.addAll(termSet);
+	public TermSet(Collection<Term> termSet) {
+		super(termSet);
 	}
 
 	/**
@@ -28,10 +28,10 @@ public class TermSet extends HashSet<Term> {
 	 * @param termList the data set.
 	 * @return
 	 */
-	public boolean intersects(TermList termList) {
+	public boolean intersects(MintermList mintermList) {
 		boolean intersects = false;
 		for (Term term : this) {
-			if (term.intersects(termList)) {
+			if (term.intersects(mintermList)) {
 				intersects = true;
 				break;
 			}

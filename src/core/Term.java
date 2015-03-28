@@ -1,12 +1,13 @@
 package core;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 
 /**
- * A {@link Term} is a set of {@link Literal} elements. Order of {@link Literal}
- * does not matter. A term can represent a minterm or an implicant, prime
- * implicant, essential prime implicant, or a term under construction.
+ * A {@link Term} is a set of {@link Literal} elements. Order of elements
+ * does not matter. A term can represent an implicant, prime implicant, 
+ * essential prime implicant, or a term under construction.
  * 
  * @author lvl2pillow
  *
@@ -19,9 +20,8 @@ public class Term extends HashSet<Literal> {
 		super();
 	}
 	
-	public Term(Term term) {
-		super();
-		super.addAll(term);
+	public Term(Collection<Literal> term) {
+		super(term);
 	}
 	
 	@Override
@@ -34,36 +34,36 @@ public class Term extends HashSet<Literal> {
 	
 	/**
 	 * 
-	 * @return {@code true} if this term covers another term, 
+	 * @return {@code true} if this term covers a minterm, 
 	 * 	else {@code false}. An empty term covers nothing.
 	 */
-	public boolean covers(Term term) {
+	public boolean covers(Minterm minterm) {
 		if (super.isEmpty()) return false;
 		Iterator<Literal> i = super.iterator();
 		while (i.hasNext())
-			if (!term.contains(i.next())) return false;
+			if (!minterm.contains(i.next())) return false;
 		return true;
 	}
 	
 	/**
 	 * 
-	 * @return {@code true} if this term intersects another term, 
+	 * @return {@code true} if this term intersects a minterm, 
 	 * 	else {@code false}. An empty term intersects nothing.
 	 */
-	public boolean intersects(Term term) {
-		return covers(term);
+	public boolean intersects(Minterm minterm) {
+		return covers(minterm);
 	}
 	
 	/**
 	 * 
-	 * @param termList a data set.
+	 * @param dataSet
 	 * @return {@code true} if this term intersects with the data set, 
 	 * 	else {@code false}. An empty term intersects nothing.
 	 */
-	public boolean intersects(TermList termList) {
+	public boolean intersects(MintermList dataSet) {
 		boolean intersects = false;
-		for (Term term : termList) {
-			if (this.covers(term)) {
+		for (Minterm minterm : dataSet) {
+			if (this.covers(minterm)) {
 				intersects = true;
 				break;
 			}

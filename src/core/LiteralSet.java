@@ -1,5 +1,6 @@
 package core;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Random;
 
@@ -17,15 +18,17 @@ public class LiteralSet extends HashSet<Literal> {
 		super();
 	}
 	
-	public LiteralSet(LiteralSet literalSet) {
-		super();
-		this.addAll(literalSet);
+	public LiteralSet(Collection<Literal> literalSet) {
+		super(literalSet);
 	}
 	
+	/**
+	 * This {@code add} method prevents adding the same variable to the set. The
+	 * compliment form will be discarded in favor of the normal form.
+	 * 
+	 */
 	@Override
 	public boolean add(Literal literal) {
-		// prevents adding the same variable to the set, i.e. adding compliment form
-		// the compliment form will be discarded in favor of the normal form
 		Literal compliment;
 		if (literal.isNormal() && this.contains(compliment = new Literal(literal.index(), false)))
 			this.remove(compliment);

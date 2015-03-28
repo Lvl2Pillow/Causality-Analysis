@@ -2,7 +2,6 @@ package core;
 
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Set;
 
 /**
  * Abstract class for Implicant Expansion.
@@ -11,10 +10,10 @@ import java.util.Set;
  *
  */
 public abstract class IE {
-	protected final TermList offset;
+	protected final MintermList offset;
 	protected final TermSet implicants;
 	
-	public IE(TermList offset, TermSet implicants) {
+	public IE(MintermList offset, TermSet implicants) {
 		this.offset = offset;
 		this.implicants = implicants;
 	}
@@ -86,7 +85,7 @@ public abstract class IE {
 	 */
 	protected boolean isPrimeImplicant(Term implicant) {
 		boolean intersects = false;
-		for (Term minterm : offset) {
+		for (Minterm minterm : offset) {
 			if (implicant.covers(minterm)) {
 				intersects = true;
 				break;
@@ -104,7 +103,7 @@ public abstract class IE {
 	 */
 	protected int minManhattanDistanceBetween(Term term) {
 		int minDist = 2;			// initialize to 2 is enough
-		for (Term minterm : offset) {
+		for (Minterm minterm : offset) {
 			int dist = manhattanDistanceBetween(minterm, term);
 			minDist = (dist < minDist) ? dist : minDist;
 		}
@@ -120,7 +119,7 @@ public abstract class IE {
 	 * @param term
 	 * @return
 	 */
-	protected int manhattanDistanceBetween(Term minterm, Term term) {
+	protected int manhattanDistanceBetween(Minterm minterm, Term term) {
 		int dist = 0;
 		for (Literal literal : term) {
 			if (!minterm.contains(literal))

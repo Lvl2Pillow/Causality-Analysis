@@ -8,11 +8,11 @@ package core;
  */
 public abstract class UCP {
 	@SuppressWarnings("unused")
-	private final TermList onset;
+	private final MintermList onset;
 	@SuppressWarnings("unused")
 	private final TermSet primeImplicants;
 	
-	public UCP(TermList onset, TermSet primeImplicants) {
+	public UCP(MintermList onset, TermSet primeImplicants) {
 		this.onset = onset;
 		this.primeImplicants = primeImplicants;
 	}
