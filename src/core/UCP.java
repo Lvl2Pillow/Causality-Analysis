@@ -31,12 +31,24 @@ public abstract class UCP {
 	}
 	
 	/**
-	 * Abstract method for getting set of essential prime implicants that wholly
-	 * covers the onset. This method must be implemented in a concrete class.
 	 * 
 	 * @return set of essential prime implicants that wholly covers the onset.
 	 */
-	protected abstract TermSet getEssentialPrimeImplicants();
+	protected TermSet getEssentialPrimeImplicants() {
+		TermSet essentialPrimeImplicants = new TermSet();
+		Map<Minterm, Set<Term>> coverMatrix = getCoverMatrix();
+		while (!coverMatrix.isEmpty()) {
+			getEssentialPrimeImplicantsHelper(essentialPrimeImplicants, coverMatrix);
+		}
+		return essentialPrimeImplicants;
+	}
+	
+	/**
+	 * Abstract method for finding essential prime implicants.
+	 * This method must be implemented in a concrete class.
+	 */
+	protected abstract void getEssentialPrimeImplicantsHelper(TermSet essentialPrimeImplicants, 
+			Map<Minterm, Set<Term>> coverMatrix);
 	
 	/**
 	 * A cover matrix shows which minterms are covered by which prime implicants.
