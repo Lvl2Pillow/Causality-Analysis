@@ -1,6 +1,8 @@
 package core;
 
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Queue;
 
 /**
@@ -98,13 +100,13 @@ public abstract class IE {
 	 * Returns the minimum Manhattan distance between a term and any minterm from
 	 * the offset.
 	 * 
-	 * @param term
+	 * @param currentImplicant
 	 * @return
 	 */
-	protected int minManhattanDistanceBetween(Term term) {
-		int minDist = 2;			// initialize to 2 is enough
+	protected int minManhattanDistanceBetween(Term currentImplicant) {
+		int minDist = Integer.MAX_VALUE;
 		for (Minterm minterm : offset) {
-			int dist = manhattanDistanceBetween(minterm, term);
+			int dist = manhattanDistanceBetween(minterm, currentImplicant);
 			minDist = (dist < minDist) ? dist : minDist;
 		}
 		return minDist;
@@ -116,16 +118,33 @@ public abstract class IE {
 	 * minterm.
 	 * 
 	 * @param minterm a minterm represented as a {@link Term}
-	 * @param term
+	 * @param currentImplicant
 	 * @return
 	 */
-	protected int manhattanDistanceBetween(Minterm minterm, Term term) {
+	protected int manhattanDistanceBetween(Minterm minterm, Term currentImplicant) {
 		int dist = 0;
-		for (Literal literal : term) {
+		for (Literal literal : currentImplicant) {
 			if (!minterm.contains(literal))
 				++dist;
 		}
 		return dist;
+	}
+	
+	/**
+	 * 
+	 * @return mapping of every literal with its manhattan distance heuristic
+	 */
+	protected Map<Literal, Integer> getManhattanDistanceHeuristic(Term currentImplicant) {
+		Map<Literal, Integer> manhattanDistanceHeuristic = new HashMap<Literal, Integer>();
+		// find the resulting min manhattan distance for each literal removal
+		for (Literal literal : currentImplicant) {
+			// remove the literal
+			Term newTerm = new Term(currentImplicant);
+			newTerm.remove(literal);
+			// calculate min manhattan distance
+			manhattanDistanceHeuristic.put(literal, minManhattanDistanceBetween(newTerm));
+		}
+		return manhattanDistanceHeuristic;
 	}
 
 }
