@@ -28,14 +28,19 @@ public class TermSet extends HashSet<Term> {
 	 * @param termList the data set.
 	 * @return
 	 */
-	public boolean intersects(MintermList mintermList) {
+	public boolean intersects(MintermList dataSet) {
 		boolean intersects = false;
 		for (Term term : this) {
-			if (term.intersects(mintermList)) {
+			if (term.intersects(dataSet)) {
 				intersects = true;
 				break;
 			}
 		}
 		return intersects;
+	}
+	
+	public boolean covers(MintermList dataSet) {
+		// TODO
+		return false;
 	}
 }
