@@ -6,7 +6,7 @@ import java.util.Map.Entry;
 import core.Literal;
 import core.LiteralSet;
 import core.Term;
-import core.TermList;
+import core.MintermList;
 import core.TermSet;
 
 /**
@@ -18,7 +18,7 @@ import core.TermSet;
 public class CDS extends core.CDS {
 	private final int nIterations;		// number of iterations to run CDS
 	
-	public CDS(TermList onset, TermList offset, int nIterations) {
+	public CDS(MintermList onset, MintermList offset, int nIterations) {
 		super(onset, offset);
 		this.nIterations = nIterations;
 	}
@@ -37,7 +37,7 @@ public class CDS extends core.CDS {
 	 * 
 	 */
 	@Override
-	protected LiteralSet getLiteralCandidates(Term term, TermList currentOnset) {
+	protected LiteralSet getLiteralCandidates(Term term, MintermList currentOnset) {
 		LiteralSet literalCandidates = new LiteralSet();
 		double maxLiteralFrequency = 0.0;		
 		Map<Literal, Double> literalFrequencyHeuristic = 

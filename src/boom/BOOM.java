@@ -1,6 +1,6 @@
 package boom;
 
-import core.TermList;
+import core.MintermList;
 import core.TermSet;
 
 /**
@@ -10,11 +10,11 @@ import core.TermSet;
  *
  */
 public class BOOM {
-	private final TermList onset;
-	private final TermList offset;
+	private final MintermList onset;
+	private final MintermList offset;
 	private final int nIterations;
 	
-	public BOOM(TermList onset, TermList offset, int nIterations) {
+	public BOOM(MintermList onset, MintermList offset, int nIterations) {
 		this.onset = onset;
 		this.offset = offset;
 		this.nIterations = nIterations;
@@ -26,7 +26,8 @@ public class BOOM {
 	 * @return final solution.
 	 */
 	public TermSet run() {
-		return new UCP(onset, new IE(offset, new CDS(onset, offset, nIterations).run()).run()).run();
+		return new UCP(onset, new IE(offset, new CDS(onset, offset, 
+				nIterations).run()).run()).run();
 	}
 
 }
