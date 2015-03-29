@@ -7,8 +7,6 @@ package core;
  * 
  */
 public class Literal {
-	private static int nLiterals = 0;	// static count of number of {@link Literal} instances
-	
 	public final int index; 			// unique variable index
 	
 	private final String name;			// variable name
@@ -16,21 +14,23 @@ public class Literal {
 	
 	/**
 	 * 
+	 * @param index unique variable index.
 	 * @param normal whether literal is normal or compliment form.
 	 */
-	public Literal(boolean normal) {
-		this.index = ++nLiterals;
-		this.name = Integer.toString(index);
+	public Literal(int index, boolean normal) {
+		this.index = index;
+		this.name = "";
 		this.normal = normal;
 	}
 	
 	/**
 	 * 
+	 * @param index unique variable index.
 	 * @param name variable name.
 	 * @param normal whether literal is normal or compliment form.
 	 */
-	public Literal(String name, boolean normal) {
-		this.index = ++nLiterals;
+	public Literal(int index, String name, boolean normal) {
+		this.index = index;
 		this.name = name;
 		this.normal = normal;
 	}
