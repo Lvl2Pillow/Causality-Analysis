@@ -18,20 +18,20 @@ public class TermList extends ArrayList<Term> {
 		super();
 	}
 	
-	public TermList(Collection<Term> dataSet) {
-		super(dataSet);
+	public TermList(Collection<Term> termList) {
+		super(termList);
 	}
 	
 	/**
 	 * Removes all terms covered by a given term.
 	 * 
-	 * @param coverTerm
+	 * @param coveringTerm
 	 * @return resulting list of terms.
 	 */
-	public TermList removeTermsCoveredBy(Term coverTerm) {
+	public TermList removeTermsCoveredBy(Term coveringTerm) {
 		Iterator<Term> i = super.iterator();
 		while (i.hasNext()) {
-			if (coverTerm.covers(i.next()))
+			if (coveringTerm.covers(i.next()))
 				i.remove();
 		}
 		return this;
@@ -40,13 +40,13 @@ public class TermList extends ArrayList<Term> {
 	/**
 	 * Returns all terms that are not covered by a given term.
 	 * 
-	 * @param coverTerm
+	 * @param coveringTerm
 	 * @return list of uncovered terms.
 	 */
-	public TermList getUncoveredBy(Term coverTerm) {
+	public TermList getUncoveredBy(Term coveringTerm) {
 		TermList uncoveredTerms = new TermList();
 		for (Term term : this) {
-			if (!coverTerm.covers(term))
+			if (!coveringTerm.covers(term))
 				uncoveredTerms.add(term);
 		}	
 		return uncoveredTerms;

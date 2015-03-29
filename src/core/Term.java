@@ -1,20 +1,20 @@
 package core;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
 
 /**
- * A {@link Term} is a set of {@link Literal} elements. Order of elements
- * does not matter. A term can represent an implicant, prime implicant, 
- * essential prime implicant, or a term under construction.
+ * A {@link Term} is a list of {@link Literal} elements. Order of elements
+ * is preserved. Duplicate elements are not allowed. A {@link Term} may
+ * represent a term, an implicant, or a term under construction.
  * 
  * @author lvl2pillow
  *
  */
-public class Term extends HashSet<Literal> {
+public class Term extends ArrayList<Literal> {
 	// auto-generated serialVersionUID
-	private static final long serialVersionUID = -5774491305692434616L;
+	private static final long serialVersionUID = 7727278808609346835L;
 	
 	public Term() {
 		super();
@@ -25,33 +25,34 @@ public class Term extends HashSet<Literal> {
 	}
 	
 	@Override
-	public boolean add(Literal literal) {
+	public boolean add(Literal newLiteral) {
+		// can not add duplicate literal
+		if (this.contains(newLiteral)) return false;
 		// can not add literal if compliment form already exists
-		if (this.contains(new Literal(literal.index(), !literal.normal())))
-			return false;
-		return super.add(literal);
+		if (this.contains(new Literal(newLiteral.index(), !newLiteral.normal()))) return false;
+		return super.add(newLiteral);
 	}
 	
 	/**
 	 * 
-	 * @return {@code true} if this term covers a minterm, 
+	 * @return {@code true} if this term covers another term, 
 	 * 	else {@code false}. An empty term covers nothing.
 	 */
-	public boolean covers(Minterm minterm) {
+	public boolean covers(Term coveredTerm) {
 		if (super.isEmpty()) return false;
 		Iterator<Literal> i = super.iterator();
 		while (i.hasNext())
-			if (!minterm.contains(i.next())) return false;
+			if (!coveredTerm.contains(i.next())) return false;
 		return true;
 	}
 	
 	/**
 	 * 
-	 * @return {@code true} if this term intersects a minterm, 
+	 * @return {@code true} if this term intersects another term, 
 	 * 	else {@code false}. An empty term intersects nothing.
 	 */
-	public boolean intersects(Minterm minterm) {
-		return covers(minterm);
+	public boolean intersects(Term coveredTerm) {
+		return covers(coveredTerm);
 	}
 	
 	/**
@@ -60,9 +61,9 @@ public class Term extends HashSet<Literal> {
 	 * @return {@code true} if this term intersects with the data set, 
 	 * 	else {@code false}. An empty term intersects nothing.
 	 */
-	public boolean intersects(MintermList dataSet) {
+	public boolean intersects(TermList dataSet) {
 		boolean intersects = false;
-		for (Minterm minterm : dataSet) {
+		for (Term minterm : dataSet) {
 			if (this.covers(minterm)) {
 				intersects = true;
 				break;
