@@ -10,29 +10,29 @@ public class Literal {
 	public final int index; 			// unique variable index
 	
 	private final String name;			// variable name
-	private final boolean normal;		// normal or compliment
+	private final boolean isNormal;		// normal or compliment form
 	
 	/**
 	 * 
 	 * @param index unique variable index.
-	 * @param normal whether literal is normal or compliment form.
+	 * @param isNormal whether literal is normal or compliment form.
 	 */
-	public Literal(int index, boolean normal) {
+	public Literal(int index, boolean isNormal) {
 		this.index = index;
 		this.name = "";
-		this.normal = normal;
+		this.isNormal = isNormal;
 	}
 	
 	/**
 	 * 
 	 * @param index unique variable index.
 	 * @param name variable name.
-	 * @param normal whether literal is normal or compliment form.
+	 * @param isNormal whether literal is normal or compliment form.
 	 */
-	public Literal(int index, String name, boolean normal) {
+	public Literal(int index, String name, boolean isNormal) {
 		this.index = index;
 		this.name = name;
-		this.normal = normal;
+		this.isNormal = isNormal;
 	}
 	
 	// auto-generated
@@ -41,7 +41,7 @@ public class Literal {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + index;
-		result = prime * result + (normal ? 1231 : 1237);
+		result = prime * result + (isNormal ? 1231 : 1237);
 		return result;
 	}
 
@@ -57,19 +57,17 @@ public class Literal {
 		Literal other = (Literal) obj;
 		if (index != other.index)
 			return false;
-		if (normal != other.normal)
+		if (isNormal != other.isNormal)
 			return false;
 		return true;
 	}
 
-	public String toString() { return normal ? name : "~"+name; }
+	public String toString() { return isNormal ? name : "~"+name; }
 	public String name() { return name; }
 	public String getName() { return name(); }
 	public int index() { return index; }
 	public int getIndex() { return index(); }
-	public boolean normal() { return normal; }
-	public boolean getNormal() { return normal; }
-	public boolean isNormal() { return normal ? normal : !normal; }
+	public boolean isNormal() { return isNormal ? isNormal : !isNormal; }
 	public boolean isCompliment() {return !isNormal(); }
 
 }
