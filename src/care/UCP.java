@@ -1,11 +1,11 @@
 package care;
 
-import core.TermList;
+import core.MintermList;
 import core.TermSet;
 
 public class UCP extends core.UCP {
 
-	public UCP(TermList onset, TermSet primeImplicants) {
+	public UCP(MintermList onset, TermSet primeImplicants) {
 		super(onset, primeImplicants);
 		// TODO Auto-generated constructor stub
 	}

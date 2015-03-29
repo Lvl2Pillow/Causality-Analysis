@@ -1,15 +1,15 @@
 package care;
 
-import core.TermList;
+import core.MintermList;
 import core.TermSet;
 
 public class CARE {
-	final TermList onset;
-	final TermList offset;
+	final MintermList onset;
+	final MintermList offset;
 	final double interactivity;
 	final Social social;
 	
-	public CARE(TermList onset, TermList offset, double interactivity) {
+	public CARE(MintermList onset, MintermList offset, double interactivity) {
 		this.onset = onset;
 		this.offset = offset;
 		this.interactivity = interactivity;

@@ -10,7 +10,7 @@ public class CDS extends core.CDS {
 	private final double interactivity;
 //	private final double similarity;
 	
-	public CDS(TermList onset, TermList offset, Map<Literal, Double> socialHeuristic, 
+	public CDS(MintermList onset, MintermList offset, Map<Literal, Double> socialHeuristic, 
 			double interactivity) {
 		super(onset, offset);
 		this.socialHeuristic = socialHeuristic;
@@ -25,7 +25,7 @@ public class CDS extends core.CDS {
 	 * 
 	 */
 	@Override
-	protected LiteralSet getLiteralCandidates(Term term, TermList currentOnset) {
+	protected LiteralSet getLiteralCandidates(Term term, MintermList currentOnset) {
 		// literals with highest overall score
 		LiteralSet literalCandidates = new LiteralSet();
 		double maxOverallScore = 0.0;		

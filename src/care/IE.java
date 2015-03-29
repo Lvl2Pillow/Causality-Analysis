@@ -2,12 +2,12 @@ package care;
 
 import core.LiteralSet;
 import core.Term;
-import core.TermList;
+import core.MintermList;
 import core.TermSet;
 
 public class IE extends core.IE {
 
-	public IE(TermList offset, TermSet implicants) {
+	public IE(MintermList offset, TermSet implicants) {
 		super(offset, implicants);
 		// TODO Auto-generated constructor stub
 	}
