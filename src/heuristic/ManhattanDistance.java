@@ -1,5 +1,8 @@
 package heuristic;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import core.Literal;
 import core.Term;
 import core.TermList;
@@ -11,25 +14,41 @@ import core.TermList;
  * @author lvl2pillow
  *
  */
-public class ManhattanDistance implements HeuristicStrategy {
+public class ManhattanDistance implements HeuristicStrategy<Literal, Integer> {
 	private final Term term;
 	private final TermList offset;
 	
 	/**
 	 * 
-	 * @param term resulting term after literal removal.
+	 * @param term
 	 * @param offset
 	 */
 	public ManhattanDistance(Term term, TermList offset) {
 		this.term = term;
 		this.offset = offset;
-	}
+	}	
 	
 	@Override
-	public double getValue() {
-		return (double)minManhattanDistanceBetween(term, offset);
+	public Map<Literal, Integer> getHeuristic() {
+		return getManhattanDistanceHeuristic(term, offset);
 	}
 	
+	/**
+	 * 
+	 * @return mapping of every literal with its manhattan distance
+	 */
+	private Map<Literal, Integer> getManhattanDistanceHeuristic(Term term, TermList offset) {
+		Map<Literal, Integer> manhattanDistanceHeuristic = new HashMap<Literal, Integer>();
+		// find the resulting min manhattan distance for each literal removal
+		for (Literal literal : term) {
+			// remove the literal
+			Term newTerm = new Term(term);
+			newTerm.remove(literal);
+			// calculate min manhattan distance
+			manhattanDistanceHeuristic.put(literal, minManhattanDistanceBetween(newTerm, offset));
+		}
+		return manhattanDistanceHeuristic;
+	}
 	
 	/**
 	 * Returns the minimum Manhattan distance between a term and any minterm 
