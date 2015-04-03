@@ -7,27 +7,26 @@ package core;
  * 
  */
 public class Literal {
-	public final int index; 			// unique variable index
-	
+	private final int index; 			// variable index
 	private final String name;			// variable name
 	private final boolean isNormal;		// normal or compliment form
 	
 	/**
 	 * 
-	 * @param index unique variable index.
-	 * @param isNormal whether literal is normal or compliment form.
+	 * @param index variable index.
+	 * @param isNormal whether this literal is normal or compliment form.
 	 */
 	public Literal(int index, boolean isNormal) {
 		this.index = index;
-		this.name = "";
+		this.name = Integer.toString(index);
 		this.isNormal = isNormal;
 	}
 	
 	/**
 	 * 
-	 * @param index unique variable index.
+	 * @param index variable index.
 	 * @param name variable name.
-	 * @param isNormal whether literal is normal or compliment form.
+	 * @param isNormal whether this literal is normal or compliment form.
 	 */
 	public Literal(int index, String name, boolean isNormal) {
 		this.index = index;
@@ -61,12 +60,12 @@ public class Literal {
 			return false;
 		return true;
 	}
-
+	
+	@Override
 	public String toString() { return isNormal ? name : "~"+name; }
-	public String name() { return name; }
-	public String getName() { return name(); }
-	public int index() { return index; }
-	public int getIndex() { return index(); }
+	
+	public String getName() { return name; }
+	public int getIndex() { return index; }
 	public boolean isNormal() { return isNormal ? isNormal : !isNormal; }
 	public boolean isCompliment() {return !isNormal(); }
 

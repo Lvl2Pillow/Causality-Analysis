@@ -5,9 +5,9 @@ import java.util.Collection;
 import java.util.Iterator;
 
 /**
- * A {@link Term} is a list of {@link Literal} elements. Order of elements
- * is preserved. Duplicate elements are not allowed. A {@link Term} may
- * represent a term, an implicant, or a term under construction.
+ * A {@code Term} is a list of {@link Literal} elements. Order of elements
+ * is preserved. Duplicate elements are not allowed. A {@code Term} may
+ * represent a minterm, an implicant, or a term under construction.
  * 
  * @author lvl2pillow
  *
@@ -28,8 +28,13 @@ public class Term extends ArrayList<Literal> {
 	public boolean add(Literal newLiteral) {
 		// can not add duplicate literal
 		if (this.contains(newLiteral)) return false;
-		// can not add literal if compliment form already exists
-		if (this.contains(new Literal(newLiteral.index(), !newLiteral.normal()))) return false;
+		// can not add literal if alternate form already exists
+		if (newLiteral.isNormal() && 
+				this.contains(new Literal(newLiteral.getIndex(), false)))
+			return false;
+		else if (newLiteral.isCompliment() && 
+				this.contains(new Literal(newLiteral.getIndex(), true)))
+			return false;
 		return super.add(newLiteral);
 	}
 	

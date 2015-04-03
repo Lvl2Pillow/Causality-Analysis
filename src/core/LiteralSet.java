@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Random;
 
 /**
- * A {@link HashSet} of {@link Literal} elements.
+ * A {@link HashSet} of {@code Literal} elements.
  * 
  * @author lvl2pillow
  *
@@ -30,7 +30,8 @@ public class LiteralSet extends HashSet<Literal> {
 	@Override
 	public boolean add(Literal literal) {
 		Literal compliment;
-		if (literal.isNormal() && this.contains(compliment = new Literal(literal.index(), false)))
+		if (literal.isNormal() && 
+				this.contains(compliment = new Literal(literal.getIndex(), false)))
 			this.remove(compliment);
 		return super.add(literal);
 	}
@@ -39,7 +40,7 @@ public class LiteralSet extends HashSet<Literal> {
 	 * 
 	 * @return a random literal from the set.
 	 */
-	public Literal getRandomLiteral() {
+	public Literal randomLiteral() {
 		int n = new Random().nextInt(this.size());
 		int i = 0;
 		for (Literal literal : this) {
@@ -49,4 +50,5 @@ public class LiteralSet extends HashSet<Literal> {
 		// TODO log if code reaches here
 		return null;
 	}
+	
 }
