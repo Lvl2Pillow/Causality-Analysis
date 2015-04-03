@@ -21,14 +21,14 @@ public class TermSet extends HashSet<Term> {
 	public TermSet(Collection<Term> termSet) {
 		super(termSet);
 	}
-
+	
 	/**
-	 * Whether any of these terms intersects with the data set.
+	 * Whether any of these terms covers the data set.
 	 * 
 	 * @param termList the data set.
 	 * @return
 	 */
-	public boolean intersects(MintermList dataSet) {
+	public boolean covers(TermList dataSet) {
 		boolean intersects = false;
 		for (Term term : this) {
 			if (term.intersects(dataSet)) {
@@ -38,9 +38,15 @@ public class TermSet extends HashSet<Term> {
 		}
 		return intersects;
 	}
-	
-	public boolean covers(MintermList dataSet) {
-		// TODO
-		return false;
+
+	/**
+	 * Whether any of these terms intersects with the data set.
+	 * 
+	 * @param termList the data set.
+	 * @return
+	 */
+	public boolean intersects(TermList dataSet) {
+		return covers(dataSet);
 	}
+	
 }
