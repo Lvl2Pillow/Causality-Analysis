@@ -3,7 +3,7 @@ package graph;
 import util.Stat;
 
 /**
- * A {@link Edge} object represents a edge in a graph. Contains properties
+ * A {@code Edge} object represents a edge in a graph. Contains properties
  * about the edge.
  * 
  * @author sojh2607
@@ -11,15 +11,15 @@ import util.Stat;
  *
  */
 public class Edge {
-	private static int nEdges = 0;		// static count of number of {@link Edge} instances
+	private static int nEdges = 0;		// static count of number of Edge instances
 	private static final double normalizedCap = 10.0;	// normalize between 1-10
 	
 	public final int id;				// unique vertex id
 	
 	private String label;				// edge label
 	private int count;					// TODO
-	private static int minCount = Integer.MAX_VALUE;	// min count from all {@link Edge} instances
-	private static int maxCount = Integer.MIN_VALUE;	// max count from all {@link Edge} instances
+	private static int minCount = Integer.MAX_VALUE;	// min count from all Edge instances
+	private static int maxCount = Integer.MIN_VALUE;	// max count from all Edge instances
 	
 	public Edge() {
 		this.id = ++nEdges;

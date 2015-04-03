@@ -1,7 +1,7 @@
 package graph;
 
 /**
- * A {@link Vertex} object represents a vertex in a graph. Contains properties
+ * A {@code Vertex} object represents a vertex in a graph. Contains properties
  * about the vertex.
  * 
  * @author sojh2607
@@ -9,7 +9,7 @@ package graph;
  *
  */
 public class Vertex {
-	private static int nVertices = 0;	// static count of number of {@link Vertex} instances
+	private static int nVertices = 0;	// static count of number of Vertex instances
 	
 	public final int id;				// unique vertex id
 	
