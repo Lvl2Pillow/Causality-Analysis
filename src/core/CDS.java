@@ -1,8 +1,6 @@
 package core;
 
-import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.Queue;
 
 /**
@@ -12,10 +10,10 @@ import java.util.Queue;
  *
  */
 public abstract class CDS {
-	protected final MintermList onset;
-	protected final MintermList offset;
+	protected final TermList onset;
+	protected final TermList offset;
 	
-	public CDS(MintermList onset, MintermList offset) {
+	public CDS(TermList onset, TermList offset) {
 		this.onset = onset;
 		this.offset = offset;
 	}
@@ -26,7 +24,7 @@ public abstract class CDS {
 	 * @return implicants.
 	 */
 	public TermSet run() {
-		return getImplicants();
+		return implicants();
 	}
 	
 	/**
@@ -34,13 +32,13 @@ public abstract class CDS {
 	 * 
 	 * @return
 	 */
-	protected TermSet getImplicants() {
+	protected TermSet implicants() {
 		TermSet implicants = new TermSet();
-		Queue<MintermList> onsetPermutations = new LinkedList<MintermList>();
+		Queue<TermList> onsetPermutations = new LinkedList<TermList>();
 		// initial permutation is the complete onset
-		onsetPermutations.add(new MintermList(onset));
+		onsetPermutations.add(new TermList(onset));
 		while (!onsetPermutations.isEmpty())
-			getImplicantsHelper(implicants, onsetPermutations, onsetPermutations.poll());
+			implicantsHelper(implicants, onsetPermutations, onsetPermutations.poll());
 		return implicants;
 	}
 	
@@ -50,14 +48,14 @@ public abstract class CDS {
 	 * @param onsetPermutations all permutations of the onset.
 	 * @param onsetPermutation current permutation of the onset.
 	 */
-	protected void getImplicantsHelper(TermSet implicants, 
-			Queue<MintermList> onsetPermutations, MintermList currentOnset) {
+	protected void implicantsHelper(TermSet implicants, 
+			Queue<TermList> onsetPermutations, TermList currentOnset) {
 		// stop if current onset is empty, i.e. completely covered
 		if (currentOnset.isEmpty()) return;
-		TermSet implicantCandidates = getImplicantCandidates(currentOnset);
+		TermSet implicantCandidates = implicantCandidates(currentOnset);
 		// add new onset permutations
 		for (Term implicant : implicantCandidates) {
-			MintermList newOnset = new MintermList(currentOnset);
+			TermList newOnset = new TermList(currentOnset);
 			onsetPermutations.add(newOnset.removeTermsCoveredBy(implicant));
 		}
 		// add implicants
@@ -65,88 +63,57 @@ public abstract class CDS {
 	}
 	
 	/**
-	 * Returns all "good" implicants given the current state of the onset covering.
+	 * Returns all "good" implicant candidates given the current state of the 
+	 * onset covering.
 	 * 
 	 * @param currentOnset current permutation of the onset.
 	 * @return all "good" implicant candidates.
 	 */
-	protected TermSet getImplicantCandidates(MintermList currentOnset) {
-		TermSet terms = new TermSet();
+	protected TermSet implicantCandidates(TermList currentOnset) {
+		TermSet implicantCandidates = new TermSet();
 		Queue<Term> termPermutations = new LinkedList<Term>();
 		// initial permutation is an empty term
 		termPermutations.add(new Term());
 		while (!termPermutations.isEmpty()) {
-			getImplicantCandidatesHelper(terms, termPermutations, 
+			implicantCandidatesHelper(implicantCandidates, termPermutations, 
 					termPermutations.poll(), currentOnset);
 		}
-		return terms;
+		return implicantCandidates;
 	}
 	
 	/**
 	 * 
-	 * @param terms all terms built.
+	 * @param implicantCandidates all implicant candidates found.
 	 * @param termPermutations all permutations of unbuilt terms.
 	 * @param currentTerm current term under construction.
 	 * @param currentOnset current permutation of the onset.
 	 */
-	protected void getImplicantCandidatesHelper(TermSet terms, 
+	protected void implicantCandidatesHelper(TermSet implicantCandidates, 
 			Queue<Term> termPermutations, Term currentTerm, 
-			MintermList currentOnset) {
+			TermList currentOnset) {
 		// stop if current term does not intersect with the offset
-		boolean intersects = false;
-		for (Minterm minterm : offset) {
-			if (currentTerm.covers(minterm)) {
-				intersects = true;
-				break;
-			}
+		if (!currentTerm.intersects(offset)) {
+			implicantCandidates.add(currentTerm);
+			return;
 		}
-		if (!intersects) return;
-		LiteralSet literalCandidates = getLiteralCandidates(currentTerm, currentOnset);
+		LiteralSet literalCandidates = literalCandiates(currentTerm, currentOnset);
 		// add new term permutations
 		// TODO log if multiple literals
 		for (Literal literal : literalCandidates) {
 			Term newTerm = new Term(currentTerm);
 			newTerm.add(literal);
-			terms.add(newTerm);
+			termPermutations.add(newTerm);
 		}
 	}
 	
 	/**
-	 * Abstract method for getting set of literal candidates. This method
+	 * Abstract method for finding set of literal candidates. This method
 	 * must be implemented in a concrete class.
 	 * 
 	 * @param currentOnset
 	 * @param term current term under construction.
 	 * @return set of literal candidates to add to term.
 	 */
-	protected abstract LiteralSet getLiteralCandidates(Term term, 
-			MintermList currentOnset);
-	
-	/**
-	 * Returns the literal frequencies of all valid literals. The literal
-	 * frequency is the number of occurrences of a literal from the remaining
-	 * uncovered onset.
-	 * 
-	 * @param term current term under construction.
-	 * @param currentOnset
-	 * @return
-	 */
-	protected Map<Literal, Double> getLiteralFrequencyHeuristic(Term term, 
-			MintermList currentOnset) {
-		Map<Literal, Double> literalFrequencyHeuristic = new HashMap<Literal, Double>();
-		MintermList uncoveredOnset = currentOnset.getUncoveredBy(term);
-		// TODO log if currentOnset is empty or remaining uncovered onset is empty
-		for (Minterm minterm : uncoveredOnset) {
-			for (Literal literal : minterm) {
-				// new literal
-				if (!literalFrequencyHeuristic.containsKey(literal))
-					literalFrequencyHeuristic.put(literal, 0.0);
-				// increment literal frequency
-				literalFrequencyHeuristic.replace(literal, 
-						literalFrequencyHeuristic.get(literal)+1.0);
-			}
-		}
-		return literalFrequencyHeuristic;
-	}
+	protected abstract LiteralSet literalCandiates(Term term, TermList currentOnset);
 	
 }
