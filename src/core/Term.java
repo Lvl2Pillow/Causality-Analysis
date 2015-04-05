@@ -5,8 +5,8 @@ import java.util.Collection;
 import java.util.Iterator;
 
 /**
- * A {@code Term} is a list of {@link Literal} elements. Order of elements
- * is preserved. Duplicate elements are not allowed. A {@code Term} may
+ * A {@code Term} is an {@link ArrayList} of {@link Literal} elements. Order of 
+ * elements is preserved. Duplicate elements are not allowed. A {@code Term} may
  * represent a minterm, an implicant, or a term under construction.
  * 
  * @author lvl2pillow

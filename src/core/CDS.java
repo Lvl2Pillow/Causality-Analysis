@@ -12,10 +12,21 @@ import java.util.Queue;
 public abstract class CDS {
 	protected final TermList onset;
 	protected final TermList offset;
+	protected final LiteralSet literals;		// all unique literals
 	
 	public CDS(TermList onset, TermList offset) {
 		this.onset = onset;
 		this.offset = offset;
+		this.literals = new LiteralSet();
+		try {
+			for (Literal literal : onset.get(0)) {
+				literals.add(new Literal(literal.getIndex(), true));
+				literals.add(new Literal(literal.getIndex(), false));
+			}
+		} catch (NullPointerException e) {
+			System.err.println("onset is empty.");
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -53,10 +64,11 @@ public abstract class CDS {
 		// stop if current onset is empty, i.e. completely covered
 		if (currentOnset.isEmpty()) return;
 		TermSet implicantCandidates = implicantCandidates(currentOnset);
-		// add new onset permutations
+		// update covering and add new onset permutations
 		for (Term implicant : implicantCandidates) {
 			TermList newOnset = new TermList(currentOnset);
-			onsetPermutations.add(newOnset.removeTermsCoveredBy(implicant));
+			newOnset.removeTermsCoveredBy(implicant);
+			onsetPermutations.add(newOnset);
 		}
 		// add implicants
 		implicants.addAll(implicantCandidates);

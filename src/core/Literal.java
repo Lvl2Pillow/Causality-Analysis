@@ -6,9 +6,7 @@ package core;
  * @author lvl2pillow
  * 
  */
-public class Literal {
-	private final int index; 			// variable index
-	private final String name;			// variable name
+public class Literal extends Variable {
 	private final boolean isNormal;		// normal or compliment form
 	
 	/**
@@ -17,8 +15,7 @@ public class Literal {
 	 * @param isNormal whether this literal is normal or compliment form.
 	 */
 	public Literal(int index, boolean isNormal) {
-		this.index = index;
-		this.name = Integer.toString(index);
+		super(index);
 		this.isNormal = isNormal;
 	}
 	
@@ -29,8 +26,7 @@ public class Literal {
 	 * @param isNormal whether this literal is normal or compliment form.
 	 */
 	public Literal(int index, String name, boolean isNormal) {
-		this.index = index;
-		this.name = name;
+		super(index, name);
 		this.isNormal = isNormal;
 	}
 	
@@ -64,8 +60,6 @@ public class Literal {
 	@Override
 	public String toString() { return isNormal ? name : "~"+name; }
 	
-	public String getName() { return name; }
-	public int getIndex() { return index; }
 	public boolean isNormal() { return isNormal ? isNormal : !isNormal; }
 	public boolean isCompliment() {return !isNormal(); }
 

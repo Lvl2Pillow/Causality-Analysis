@@ -13,32 +13,32 @@ import java.util.Set;
  *
  */
 public abstract class UCP {
-	private final MintermList onset;
+	private final TermList onset;
 	private final TermSet primeImplicants;
 	
-	public UCP(MintermList onset, TermSet primeImplicants) {
+	public UCP(TermList onset, TermSet primeImplicants) {
 		this.onset = onset;
 		this.primeImplicants = primeImplicants;
 	}
 	
 	/**
-	 * Returns set of Essential Prime Implicants.
+	 * Returns set of essential prime implicants.
 	 * 
 	 * @return
 	 */
 	public TermSet run() {
-		return getEssentialPrimeImplicants();
+		return essentialPrimeImplicants();
 	}
 	
 	/**
 	 * 
 	 * @return set of essential prime implicants that wholly covers the onset.
 	 */
-	protected TermSet getEssentialPrimeImplicants() {
+	protected TermSet essentialPrimeImplicants() {
 		TermSet essentialPrimeImplicants = new TermSet();
-		Map<Minterm, Set<Term>> coverMatrix = getCoverMatrix();
+		Map<Term, Set<Term>> coverMatrix = getCoverMatrix();
 		while (!coverMatrix.isEmpty()) {
-			getEssentialPrimeImplicantsHelper(essentialPrimeImplicants, coverMatrix);
+			essentialPrimeImplicantsHelper(essentialPrimeImplicants, coverMatrix);
 		}
 		return essentialPrimeImplicants;
 	}
@@ -47,8 +47,8 @@ public abstract class UCP {
 	 * Abstract method for finding essential prime implicants.
 	 * This method must be implemented in a concrete class.
 	 */
-	protected abstract void getEssentialPrimeImplicantsHelper(TermSet essentialPrimeImplicants, 
-			Map<Minterm, Set<Term>> coverMatrix);
+	protected abstract void essentialPrimeImplicantsHelper(TermSet essentialPrimeImplicants, 
+			Map<Term, Set<Term>> coverMatrix);
 	
 	/**
 	 * A cover matrix shows which minterms are covered by which prime implicants.
@@ -57,9 +57,9 @@ public abstract class UCP {
 	 * 
 	 * @return cover matrix.
 	 */
-	protected Map<Minterm, Set<Term>> getCoverMatrix() {
-		Map<Minterm, Set<Term>> coverMatrix = new HashMap<Minterm, Set<Term>>();
-		for (Minterm minterm : onset) {
+	protected Map<Term, Set<Term>> getCoverMatrix() {
+		Map<Term, Set<Term>> coverMatrix = new HashMap<Term, Set<Term>>();
+		for (Term minterm : onset) {
 			// set of prime implicants that covers the minterm
 			Set<Term> primeImplicants = new HashSet<Term>();
 			for (Term primeImplicant : this.primeImplicants) {
@@ -77,8 +77,8 @@ public abstract class UCP {
 	 */
 	protected Map<Term, Integer> getLeastCoveredHeuristic() {
 		Map<Term, Integer> leastCoveredHeuristic = new HashMap<Term, Integer>();
-		Map<Minterm, Set<Term>> coverMatrix = getCoverMatrix();
-		for (Entry<Minterm, Set<Term>> entry : coverMatrix.entrySet()) {
+		Map<Term, Set<Term>> coverMatrix = getCoverMatrix();
+		for (Entry<Term, Set<Term>> entry : coverMatrix.entrySet()) {
 			Set<Term> primeImplicants = entry.getValue();
 			// only prime implicant that covers the minterm
 			if (primeImplicants.size() == 1) {
@@ -111,13 +111,13 @@ public abstract class UCP {
 	protected Map<Term, Integer> getMostCoveredHeuristic(TermSet essentialPrimeImplicants) {
 		Map<Term, Integer> mostCoveredHeuristic = new HashMap<Term, Integer>();
 		// get uncovered minterms
-		MintermList uncoveredOnset = onset;
+		TermList uncoveredOnset = onset;
 		for (Term essentialPrimeImplicant : essentialPrimeImplicants)
-			uncoveredOnset = uncoveredOnset.getUncoveredBy(essentialPrimeImplicant);
+			uncoveredOnset = uncoveredOnset.termsUncoveredBy(essentialPrimeImplicant);
 		// find number of remaining uncovered minterms covered by each prime implicant
 		for (Term primeImplicant : primeImplicants) {
 			mostCoveredHeuristic.put(primeImplicant, 0);
-			for (Minterm minterm : uncoveredOnset) {
+			for (Term minterm : uncoveredOnset) {
 				if (primeImplicant.covers(minterm))
 					// increment count
 					mostCoveredHeuristic.replace(primeImplicant, 
