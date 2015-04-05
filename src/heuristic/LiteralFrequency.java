@@ -14,47 +14,48 @@ import core.TermList;
  * @author lvl2pillow
  *
  */
-public class LiteralFrequency implements HeuristicStrategy<Literal, Integer> {
-	private final Term term;
-	private final TermList onset;
+public class LiteralFrequency extends HashMap<Literal, Integer> 
+implements HeuristicStrategy<Literal, Integer> {
+	// auto-generated
+	private static final long serialVersionUID = 2007516413283958859L;
 	
 	/**
 	 * 
 	 * @param term current term under construction.
-	 * @param onset
+	 * @param currentOnset
 	 */
-	public LiteralFrequency(Term term, TermList onset) {
-		this.term = term;
-		this.onset = onset;
-	}
-	
-	@Override
-	public Map<Literal, Integer> getHeuristic() {
-		return getLiteralFrequencyHeuristic(term, onset);
+	public LiteralFrequency(Term term, TermList currentOnset) {
+		super(literalFrequency(term, currentOnset));
 	}
 	
 	/**
 	 * 
 	 * @param term current term under construction.
 	 * @param currentOnset
-	 * @return literal frequency
+	 * @return mapping of literals to their literal frequencies
 	 */
-	protected Map<Literal, Integer> getLiteralFrequencyHeuristic(Term term, 
+	private static Map<Literal, Integer> literalFrequency(Term term, 
 			TermList currentOnset) {
-		Map<Literal, Integer> literalFrequencyHeuristic = new HashMap<Literal, Integer>();
-		TermList uncoveredOnset = currentOnset.getUncoveredBy(term);
+		// initialize
+		Map<Literal, Integer> literalFrequency = new HashMap<Literal, Integer>();
+		TermList uncoveredOnset = currentOnset.termsUncoveredBy(term);
 		// TODO log if currentOnset is empty or remaining uncovered onset is empty
 		for (Term minterm : uncoveredOnset) {
 			for (Literal literal : minterm) {
 				// new literal
-				if (!literalFrequencyHeuristic.containsKey(literal))
-					literalFrequencyHeuristic.put(literal, 0);
+				if (!literalFrequency.containsKey(literal))
+					literalFrequency.put(literal, 0);
 				// increment literal frequency
-				literalFrequencyHeuristic.replace(literal, 
-						literalFrequencyHeuristic.get(literal)+1);
+				literalFrequency.replace(literal, 
+						literalFrequency.get(literal)+1);
 			}
 		}
-		return literalFrequencyHeuristic;
+		return literalFrequency;
+	}
+	
+	@Override
+	public Map<Literal, Integer> getHeuristic() {
+		return this;
 	}
 	
 }
